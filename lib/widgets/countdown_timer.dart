@@ -1,0 +1,96 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+class CountdownTimer extends StatefulWidget {
+  final int seconds;
+  final VoidCallback onTimeUp;
+  final Color? color;
+
+  const CountdownTimer({
+    Key? key,
+    required this.seconds,
+    required this.onTimeUp,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  _CountdownTimerState createState() => _CountdownTimerState();
+}
+
+class _CountdownTimerState extends State<CountdownTimer>
+    with SingleTickerProviderStateMixin {
+  late int _remainingSeconds;
+  Timer? _timer;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _remainingSeconds = widget.seconds;
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: widget.seconds),
+    );
+
+    _animation = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.linear),
+    );
+
+    _animationController.forward();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      } else {
+        _timer?.cancel();
+        widget.onTimeUp();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Color timerColor = widget.color ?? Theme.of(context).primaryColor;
+
+    if (_remainingSeconds <= 5) {
+      timerColor = Colors.red;
+    }
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 60,
+          height: 60,
+          child: CircularProgressIndicator(
+            value: _animation.value,
+            strokeWidth: 4,
+            backgroundColor: Colors.grey.withOpacity(0.3),
+            valueColor: AlwaysStoppedAnimation<Color>(timerColor),
+          ),
+        ),
+        Text(
+          '$_remainingSeconds',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: timerColor,
+          ),
+        ),
+      ],
+    );
+  }
+}
