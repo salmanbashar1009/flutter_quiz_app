@@ -15,6 +15,16 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   String? _selectedCategory;
 
   @override
+  void initState() {
+    super.initState();
+    // Call loadLeaderboard when the screen is first navigated to
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<LeaderboardProvider>(context, listen: false)
+          .loadLeaderboard(category: _selectedCategory);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final leaderboardProvider = Provider.of<LeaderboardProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -116,7 +126,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       child: Text('${index + 1}'),
                     ),
                     title: Text(entry.playerName),
-                    subtitle: Text('${entry.score}/${entry.totalQuestions} (${entry.percentage.toStringAsFixed(1)}%)'),
+                    subtitle: Text(
+                        '${entry.score}/${entry.totalQuestions} (${entry.percentage.toStringAsFixed(1)}%)'),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,

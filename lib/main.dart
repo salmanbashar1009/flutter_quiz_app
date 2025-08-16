@@ -12,7 +12,7 @@ import 'models/leaderboard_entry.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  // await TeXRenderingServer.start();
 
   // Initialize Hive
   await Hive.initFlutter();

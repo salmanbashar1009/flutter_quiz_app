@@ -29,39 +29,67 @@ class _ResultsScreenState extends State<ResultsScreen> {
       return;
     }
 
+    if (_isSaving) return; // Prevent multiple taps
+
     setState(() {
       _isSaving = true;
     });
 
     try {
       final quizProvider = Provider.of<QuizProvider>(context, listen: false);
-      final leaderboardProvider =
-      Provider.of<LeaderboardProvider>(context, listen: false);
+      final leaderboardProvider = Provider.of<LeaderboardProvider>(context, listen: false);
 
       final result = QuizResult(
         playerName: _nameController.text.trim(),
         score: quizProvider.score,
         totalQuestions: quizProvider.questions.length,
         date: DateTime.now(),
-        category: quizProvider.selectedCategory,
+        category: quizProvider.selectedCategory ?? 'All', // Fallback for null category
       );
 
-      await leaderboardProvider.saveScore(result);
+      // Retry logic: attempt to save up to 2 times
+      bool success = false;
+      int retryCount = 0;
+      const maxRetries = 2;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Score saved successfully!')),
-      );
+      while (!success && retryCount < maxRetries) {
+        try {
+          await leaderboardProvider.saveScore(result);
+          success = true;
+        } catch (e) {
+          retryCount++;
+          if (retryCount == maxRetries) {
+            throw e; // Rethrow after max retries
+          }
+          await Future.delayed(const Duration(milliseconds: 500)); // Wait before retry
+        }
+      }
 
-      // Navigate to leaderboard
-      Navigator.pushReplacementNamed(context, AppRoutes.leaderboard);
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Score saved successfully!')),
+        );
+
+        // Navigate to leaderboard after a slight delay to ensure UI stability
+        await Future.delayed(const Duration(milliseconds: 300));
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, AppRoutes.leaderboard);
+        }
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving score: $e')),
-      );
+      // Log the error for debugging
+      debugPrint('Error saving score: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving score: $e')),
+        );
+      }
     } finally {
-      setState(() {
-        _isSaving = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
     }
   }
 
@@ -75,6 +103,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         );
 
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: const Text('Quiz Results'),
             automaticallyImplyLeading: false,
@@ -131,7 +160,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Category: ${quizProvider.selectedCategory}',
+                          'Category: ${quizProvider.selectedCategory ?? 'All'}',
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ],
@@ -167,7 +196,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: _saveScore,
+                  onPressed: _isSaving ? null : _saveScore, // Disable button during saving
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                   ),
