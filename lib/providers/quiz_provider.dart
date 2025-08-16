@@ -11,6 +11,7 @@ class QuizProvider with ChangeNotifier {
   int _currentQuestionIndex = 0;
   int _selectedAnswerIndex = -1;
   int _score = 0;
+  int _correctAnswers = 0; // Track correct answers separately
   String _selectedCategory = AppConstants.defaultCategory;
   bool _isLoading = true;
   int _timeSpentInSeconds = 0;
@@ -94,9 +95,12 @@ class QuizProvider with ChangeNotifier {
   //
   //   // Check if answer is correct
   //   if (index == currentQuestion.correctAnswerIndex) {
+  //     _correctAnswers++;
+  //
+  //     // Calculate the new score using ScoreCalculator
   //     _score = ScoreCalculator.calculateScore(
   //       totalQuestions: _questions.length,
-  //       correctAnswers: _score + 1,
+  //       correctAnswers: _correctAnswers,
   //       timeSpentInSeconds: _timeSpentInSeconds,
   //       totalTimeLimitInSeconds: _questions.length * AppConstants.questionTimeLimit,
   //     );
