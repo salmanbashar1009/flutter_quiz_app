@@ -55,6 +55,19 @@ class _CountdownTimerState extends State<CountdownTimer>
   }
 
   @override
+  void didUpdateWidget(CountdownTimer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.seconds != widget.seconds) {
+      _timer?.cancel();
+      _animationController.reset();
+      _animationController.duration = Duration(seconds: widget.seconds);
+      _remainingSeconds = widget.seconds;
+      _animationController.forward();
+      _startTimer();
+    }
+  }
+
+  @override
   void dispose() {
     _timer?.cancel();
     _animationController.dispose();

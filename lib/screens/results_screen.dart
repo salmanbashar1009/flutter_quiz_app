@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/app_routes.dart';
 import '../models/quiz_result.dart';
-import '../providers/quiz_provider.dart';
 import '../providers/leaderboard_provider.dart';
+import '../providers/quiz_provider.dart';
 import '../utils/score_calculator.dart';
 
 class ResultsScreen extends StatefulWidget {

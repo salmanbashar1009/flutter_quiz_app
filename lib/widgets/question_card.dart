@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tex/flutter_tex.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 
 class QuestionCard extends StatelessWidget {
   final String questionText;
@@ -7,14 +7,42 @@ class QuestionCard extends StatelessWidget {
   final int totalQuestions;
 
   const QuestionCard({
-    Key? key,
+    super.key,
     required this.questionText,
     required this.currentQuestion,
     required this.totalQuestions,
-  }) : super(key: key);
+  });
+
+  // Extract LaTeX portions and clean them
+  List<(String plainText, String latexText)> _parseQuestion(String input) {
+    List<(String, String)> parts = [];
+    String remaining = input.trim();
+    RegExp latexPattern = RegExp(r'\\\(.*?\\\)'); // Match \(...\)
+
+    while (true) {
+      final match = latexPattern.firstMatch(remaining);
+      if (match == null) {
+        if (remaining.isNotEmpty) parts.add((remaining, ''));
+        break;
+      }
+      if (match.start > 0) {
+        parts.add((remaining.substring(0, match.start).trim(), ''));
+      }
+      final latex = match.group(0)!
+          .replaceAll(RegExp(r'\\\(|\\\)$'), '') // Remove \( and \)
+          .trim();
+      parts.add(('', latex));
+      remaining = remaining.substring(match.end).trim();
+      if (remaining.isEmpty) break;
+    }
+
+    return parts;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final parts = _parseQuestion(questionText);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -49,16 +77,36 @@ class QuestionCard extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
-                child: TeXView(
-                  child: TeXViewDocument(
-                    questionText,
-                    style: TeXViewStyle(
-                      fontStyle: TeXViewFontStyle(
-                        fontSize: 18
-                      ),
-                      padding: TeXViewPadding.all(8),
-                      textAlign: TeXViewTextAlign.left,
-                    ),
+                child: Container(
+                  constraints: BoxConstraints(
+                    minHeight: 50,
+                    maxWidth: MediaQuery.of(context).size.width - 32,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: parts.map((part) {
+                      final (plainText, latexText) = part;
+                      return [
+                        if (plainText.isNotEmpty)
+                          Text(
+                            plainText,
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18),
+                          ),
+                        if (latexText.isNotEmpty)
+                          Math.tex(
+                            latexText,
+                            mathStyle: MathStyle.text,
+                            textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18),
+                            onErrorFallback: (error) => Text(
+                              'Error: ${error.message} (Input: "$questionText")',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Colors.red,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                      ];
+                    }).expand((widget) => widget).toList(),
                   ),
                 ),
               ),

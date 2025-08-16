@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../config/app_constants.dart';
 import '../config/app_routes.dart';
+import '../config/constants.dart';
 import '../providers/quiz_provider.dart';
 import '../widgets/question_card.dart';
 import '../widgets/answer_option.dart';
@@ -18,6 +20,7 @@ class _QuizScreenState extends State<QuizScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -41,7 +44,30 @@ class _QuizScreenState extends State<QuizScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    final quizProvider = Provider.of<QuizProvider>(context, listen: false);
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (quizProvider.remainingTimeForCurrentQuestion > 0) {
+        quizProvider.addTimeSpent(1);
+      } else {
+        _timer?.cancel();
+        _handleTimeUp();
+      }
+    });
+  }
+
+  void _handleTimeUp() {
+    final quizProvider = Provider.of<QuizProvider>(context, listen: false);
+    if (!quizProvider.hasSelectedAnswer) {
+      // Time's up, move to next question
+      _nextQuestion();
+    }
   }
 
   void _nextQuestion() {
@@ -57,14 +83,9 @@ class _QuizScreenState extends State<QuizScreen>
 
       // Move to next question
       quizProvider.nextQuestion();
-    }
-  }
 
-  void _handleTimeUp() {
-    final quizProvider = Provider.of<QuizProvider>(context, listen: false);
-    if (!quizProvider.hasSelectedAnswer) {
-      // Time's up, move to next question
-      _nextQuestion();
+      // Start timer for the new question
+      _startTimer();
     }
   }
 
@@ -72,6 +93,13 @@ class _QuizScreenState extends State<QuizScreen>
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, quizProvider, child) {
+        // Start timer when the question changes
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (quizProvider.remainingTimeForCurrentQuestion == AppConstants.questionTimeLimit) {
+            _startTimer();
+          }
+        });
+
         if (quizProvider.isLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
@@ -127,7 +155,8 @@ class _QuizScreenState extends State<QuizScreen>
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       CountdownTimer(
-                        seconds: AppConstants.questionTimeLimit,
+                        key: ValueKey('timer_${currentQuestionIndex}'),
+                        seconds: quizProvider.remainingTimeForCurrentQuestion,
                         onTimeUp: _handleTimeUp,
                       ),
                     ],

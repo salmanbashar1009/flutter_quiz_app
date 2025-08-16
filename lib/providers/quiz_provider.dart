@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../config/app_constants.dart';
-import '../models/question.dart';
+import '../config/constants.dart';
+import '../models/questions.dart';
 import '../services/quiz_service.dart';
 import '../utils/score_calculator.dart';
 
@@ -14,6 +14,7 @@ class QuizProvider with ChangeNotifier {
   String _selectedCategory = AppConstants.defaultCategory;
   bool _isLoading = true;
   int _timeSpentInSeconds = 0;
+  int _remainingTimeForCurrentQuestion = AppConstants.questionTimeLimit;
 
   List<Question> get questions => _questions;
   int get currentQuestionIndex => _currentQuestionIndex;
@@ -22,6 +23,7 @@ class QuizProvider with ChangeNotifier {
   String get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
   int get timeSpentInSeconds => _timeSpentInSeconds;
+  int get remainingTimeForCurrentQuestion => _remainingTimeForCurrentQuestion;
 
   Question get currentQuestion => _questions[_currentQuestionIndex];
   bool get hasSelectedAnswer => _selectedAnswerIndex != -1;
@@ -66,6 +68,7 @@ class QuizProvider with ChangeNotifier {
     _selectedAnswerIndex = -1;
     _score = 0;
     _timeSpentInSeconds = 0;
+    _remainingTimeForCurrentQuestion = AppConstants.questionTimeLimit;
     notifyListeners();
   }
 
@@ -91,12 +94,21 @@ class QuizProvider with ChangeNotifier {
     if (_currentQuestionIndex < _questions.length - 1) {
       _currentQuestionIndex++;
       _selectedAnswerIndex = -1;
+      _remainingTimeForCurrentQuestion = AppConstants.questionTimeLimit;
       notifyListeners();
     }
   }
 
   void addTimeSpent(int seconds) {
     _timeSpentInSeconds += seconds;
+    _remainingTimeForCurrentQuestion -= seconds;
     notifyListeners();
   }
+
+  void resetTimerForCurrentQuestion() {
+    _remainingTimeForCurrentQuestion = AppConstants.questionTimeLimit;
+    notifyListeners();
+  }
+
+  QuizService get quizService => _quizService;
 }

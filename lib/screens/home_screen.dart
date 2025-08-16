@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../config/app_routes.dart';
 import '../config/app_theme.dart';
 import '../config/constants.dart';
+import '../providers/theme_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);

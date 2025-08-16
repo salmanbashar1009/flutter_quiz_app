@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 
 class AnswerOption extends StatelessWidget {
   final String text;
@@ -8,16 +9,44 @@ class AnswerOption extends StatelessWidget {
   final VoidCallback onTap;
 
   const AnswerOption({
-    Key? key,
+    super.key,
     required this.text,
     required this.isSelected,
     required this.isCorrect,
     required this.showResult,
     required this.onTap,
-  }) : super(key: key);
+  });
+
+  // Enhanced LaTeX cleaning and formatting
+  String _cleanLatex(String input) {
+    // Remove \(...\) delimiters
+    String cleaned = input
+        .replaceAll(RegExp(r'\\\(|\\\)$'), '') // Remove \( and \)
+        .trim();
+
+    // Ensure proper bracketing and spacing
+    if (cleaned.contains(')(')) {
+      final terms = cleaned.split(')(');
+      for (int i = 0; i < terms.length; i++) {
+        terms[i] = terms[i].trim();
+        if (!terms[i].startsWith('(')) terms[i] = '(' + terms[i];
+        if (!terms[i].endsWith(')')) terms[i] = terms[i] + ')';
+        terms[i] = terms[i].replaceAllMapped(RegExp(r'([+\-])'), (match) => ' ${match.group(0)} ');
+      }
+      cleaned = terms.join(')(');
+    } else {
+      cleaned = cleaned.replaceAllMapped(RegExp(r'([+\-])'), (match) => ' ${match.group(0)} ');
+      if (cleaned.contains('^') && !cleaned.startsWith('(')) {
+        cleaned = '(' + cleaned + ')';
+      }
+    }
+
+    return cleaned.trim();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cleanedText = _cleanLatex(text);
     Color borderColor = Colors.grey;
     Color backgroundColor = Colors.transparent;
     IconData? trailingIcon;
@@ -52,8 +81,20 @@ class AnswerOption extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: Text(
-                  text,
+                child: cleanedText.isNotEmpty
+                    ? Math.tex(
+                  cleanedText,
+                  mathStyle: MathStyle.text,
+                  textStyle: Theme.of(context).textTheme.bodyLarge,
+                  onErrorFallback: (error) => Text(
+                    'Error: ${error.message} (Input: "$text")',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+                    : Text(
+                  'Answer text is empty',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
