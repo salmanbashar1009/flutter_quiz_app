@@ -45,6 +45,12 @@ A mobile quiz application built with Flutter that loads questions from a local f
     (Required for local database functionality)   
 4.  **Run the App:**
 
+## 📂 Project Structure
+
+A brief overview of the main directories:
+
+lib/ ├── config/         # App-wide configurations (routes, themes, constants) ├── models/         # Data models (Question, QuizResult, LeaderboardEntry) ├── screens/        # UI screens for different parts of the app ├── services/       # Business logic and data handling (QuizService, LeaderboardService) ├── widgets/        # Reusable UI components ├── utils/          # Utility functions (animations, score calculation) ├── providers/      # State management providers └── main.dart       # Main application entry point
+
 
 ## 🧩 Key Dependencies
 
