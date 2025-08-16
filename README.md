@@ -49,7 +49,43 @@ A mobile quiz application built with Flutter that loads questions from a local f
 
 A brief overview of the main directories:
 
-lib/ ├── config/         # App-wide configurations (routes, themes, constants) ├── models/         # Data models (Question, QuizResult, LeaderboardEntry) ├── screens/        # UI screens for different parts of the app ├── services/       # Business logic and data handling (QuizService, LeaderboardService) ├── widgets/        # Reusable UI components ├── utils/          # Utility functions (animations, score calculation) ├── providers/      # State management providers └── main.dart       # Main application entry point
+## 📂 Project Structure
+
+The `lib/` directory contains the core application code, organized as follows:
+
+*   **`config/`**: Holds app-wide configurations.
+    *   `app_routes.dart`: Defines navigation routes.
+    *   `app_theme.dart`: Manages application themes (e.g., light/dark mode).
+    *   `constants.dart`: Stores global constants used throughout the app.
+*   **`models/`**: Contains the data model classes.
+    *   `question.dart`: Defines the structure for quiz questions.
+    *   `quiz_result.dart`: Defines the structure for storing quiz results.
+    *   `leaderboard_entry.dart`: Defines the structure for leaderboard entries.
+*   **`screens/`**: Includes all the UI screens of the application.
+    *   `home_screen.dart`: The main landing screen.
+    *   `category_selection_screen.dart`: Screen for choosing quiz categories.
+    *   `quiz_screen.dart`: The screen where the quiz is taken.
+    *   `results_screen.dart`: Displays the user's score after a quiz.
+    *   `leaderboard_screen.dart`: Shows the high scores.
+*   **`services/`**: Houses business logic and data handling services.
+    *   `quiz_service.dart`: Manages loading questions and quiz logic.
+    *   `leaderboard_service.dart`: Handles saving and retrieving leaderboard data.
+    *   `latex_service.dart`: (If applicable, or could be part of `quiz_service`) Handles LaTeX processing.
+*   **`widgets/`**: Contains reusable UI components used across multiple screens.
+    *   `question_card.dart`: Widget to display a single question.
+    *   `answer_option.dart`: Widget for displaying an answer choice.
+    *   `countdown_timer.dart`: Widget for the question timer.
+    *   `custom_button.dart`: A generic custom button.
+*   **`utils/`**: Provides utility functions.
+    *   `animations.dart`: Helper functions for animations.
+    *   `score_calculator.dart`: Logic for calculating scores.
+*   **`providers/`**: Manages the application's state using the Provider pattern.
+    *   `theme_provider.dart`: Manages the current theme state.
+    *   `quiz_provider.dart`: Manages the state related to the active quiz.
+    *   `leaderboard_provider.dart`: Manages the state for the leaderboard.
+*   **`main.dart`**: The main entry point of the Flutter application.
+
+
 
 
 ## 🧩 Key Dependencies
