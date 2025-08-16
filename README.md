@@ -1,16 +1,27 @@
 # flutter_quiz_app
 
-A new Flutter project.
+A mobile quiz application built with Flutter that loads questions from a local file, supports LaTeX support for math/science questions, runs a quiz, calculates scores, and stores a local leaderboard.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+Home Screen: App title with navigation buttons
+quiz or view leaderboard
+Category Selection: Choose quiz categories before starting
+Quiz Flow:
+Loads questions from local JSON file
+LaTeX rendering support for mathematical equations
+Timed questions (15 seconds countdown)
+Progress indicator showing current question number
+Smooth animations between questions
+Results Screen:
+Displays final score out of total
+Option to enter name
+Save score to local leaderboard
+Leaderboard Screen:
+Shows top scores sorted by highest first
+Persistent storage using Hive database
+Dark Mode: Toggle between light and dark themes
+Offline Functionality: Works entirely without internet connection
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
