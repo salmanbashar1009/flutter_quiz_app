@@ -5,9 +5,9 @@ A mobile quiz application built with Flutter that loads questions from a local f
 
 ## Features
 
-Home Screen: App title with navigation buttons
-quiz or view leaderboard
-Category Selection: Choose quiz categories before starting
+-Home Screen: App title with navigation buttons
+ quiz or view leaderboard
+-Category Selection: Choose quiz categories before starting
 Quiz Flow:
 Loads questions from local JSON file
 LaTeX rendering support for mathematical equations
