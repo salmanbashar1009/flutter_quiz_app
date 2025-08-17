@@ -94,6 +94,7 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
               onPressed: _startQuiz,
             ),
           ),
+          SizedBox(height: 50,)
         ],
       ),
     );

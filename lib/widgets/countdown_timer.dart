@@ -91,7 +91,7 @@ class _CountdownTimerState extends State<CountdownTimer>
           child: CircularProgressIndicator(
             value: _animation.value,
             strokeWidth: 4,
-            backgroundColor: Colors.grey.withOpacity(0.3),
+            backgroundColor: Colors.grey.withAlpha(150),
             valueColor: AlwaysStoppedAnimation<Color>(timerColor),
           ),
         ),

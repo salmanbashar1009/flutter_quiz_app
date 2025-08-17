@@ -208,6 +208,7 @@ class _QuizScreenState extends State<QuizScreen>
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
+                  SizedBox(height: 50,)
                 ],
               ),
             ),

@@ -54,16 +54,16 @@ class AnswerOption extends StatelessWidget {
     if (showResult) {
       if (isCorrect) {
         borderColor = Colors.green;
-        backgroundColor = Colors.green.withOpacity(0.2);
+        backgroundColor = Colors.green.withAlpha(100);
         trailingIcon = Icons.check_circle;
       } else if (isSelected && !isCorrect) {
         borderColor = Colors.red;
-        backgroundColor = Colors.red.withOpacity(0.2);
+        backgroundColor = Colors.red.withAlpha(100);
         trailingIcon = Icons.cancel;
       }
     } else if (isSelected) {
       borderColor = Theme.of(context).primaryColor;
-      backgroundColor = Theme.of(context).primaryColor.withOpacity(0.2);
+      backgroundColor = Theme.of(context).primaryColor.withAlpha(100);
     }
 
     return Card(
