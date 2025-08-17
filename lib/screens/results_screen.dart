@@ -103,7 +103,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         );
 
         return Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           appBar: AppBar(
             title: const Text('Quiz Results'),
             automaticallyImplyLeading: false,
