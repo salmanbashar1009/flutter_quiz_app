@@ -74,40 +74,40 @@ class QuizProvider with ChangeNotifier {
   }
 
 
-  void selectAnswer(int index) {
-    if (_selectedAnswerIndex != -1) return; // Answer already selected
-
-    _selectedAnswerIndex = index;
-
-    // Check if answer is correct and add 1 point if correct
-    if (index == currentQuestion.correctAnswerIndex) {
-      _score += 1;
-    }
-
-    notifyListeners();
-  }
-
-
   // void selectAnswer(int index) {
   //   if (_selectedAnswerIndex != -1) return; // Answer already selected
   //
   //   _selectedAnswerIndex = index;
   //
-  //   // Check if answer is correct
+  //   // Check if answer is correct and add 1 point if correct
   //   if (index == currentQuestion.correctAnswerIndex) {
-  //     _correctAnswers++;
-  //
-  //     // Calculate the new score using ScoreCalculator
-  //     _score = ScoreCalculator.calculateScore(
-  //       totalQuestions: _questions.length,
-  //       correctAnswers: _correctAnswers,
-  //       timeSpentInSeconds: _timeSpentInSeconds,
-  //       totalTimeLimitInSeconds: _questions.length * AppConstants.questionTimeLimit,
-  //     );
+  //     _score += 1;
   //   }
   //
   //   notifyListeners();
   // }
+
+
+  void selectAnswer(int index) {
+    if (_selectedAnswerIndex != -1) return; // Answer already selected
+
+    _selectedAnswerIndex = index;
+
+    // Check if answer is correct
+    if (index == currentQuestion.correctAnswerIndex) {
+      _correctAnswers++;
+
+      // Calculate the new score using ScoreCalculator
+      _score = ScoreCalculator.calculateScore(
+        totalQuestions: _questions.length,
+        correctAnswers: _correctAnswers,
+        timeSpentInSeconds: _timeSpentInSeconds,
+        totalTimeLimitInSeconds: _questions.length * AppConstants.questionTimeLimit,
+      );
+    }
+
+    notifyListeners();
+  }
 
   void nextQuestion() {
     if (_currentQuestionIndex < _questions.length - 1) {
