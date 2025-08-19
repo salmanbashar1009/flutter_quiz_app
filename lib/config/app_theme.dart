@@ -28,7 +28,7 @@ class AppTheme {
       cardColor: surfaceColor,
       fontFamily: 'Roboto',
       appBarTheme: const AppBarTheme(
-        color: primaryColor,
+        backgroundColor: primaryColor,
         elevation: 0,
         iconTheme: IconThemeData(color: onPrimaryColor),
         titleTextStyle: TextStyle(
@@ -65,7 +65,7 @@ class AppTheme {
       cardColor: darkSurfaceColor,
       fontFamily: 'Roboto',
       appBarTheme: const AppBarTheme(
-        color: Color(0xFF1F1F1F),
+        backgroundColor: Color(0xFF1F1F1F),
         elevation: 0,
         iconTheme: IconThemeData(color: darkOnSurfaceColor),
         titleTextStyle: TextStyle(

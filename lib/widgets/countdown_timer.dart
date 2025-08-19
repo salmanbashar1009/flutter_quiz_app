@@ -7,17 +7,17 @@ class CountdownTimer extends StatefulWidget {
   final Color? color;
 
   const CountdownTimer({
-    Key? key,
+    super.key,
     required this.seconds,
     required this.onTimeUp,
     this.color,
-  }) : super(key: key);
+  }) ;
 
   @override
-  _CountdownTimerState createState() => _CountdownTimerState();
+  CountdownTimerState createState() => CountdownTimerState();
 }
 
-class _CountdownTimerState extends State<CountdownTimer>
+class CountdownTimerState extends State<CountdownTimer>
     with SingleTickerProviderStateMixin {
   late int _remainingSeconds;
   Timer? _timer;

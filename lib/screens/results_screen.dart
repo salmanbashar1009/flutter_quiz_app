@@ -7,13 +7,13 @@ import '../providers/quiz_provider.dart';
 import '../utils/score_calculator.dart';
 
 class ResultsScreen extends StatefulWidget {
-  const ResultsScreen({Key? key}) : super(key: key);
+  const ResultsScreen({super.key});
 
   @override
-  _ResultsScreenState createState() => _ResultsScreenState();
+  ResultsScreenState createState() => ResultsScreenState();
 }
 
-class _ResultsScreenState extends State<ResultsScreen> {
+class ResultsScreenState extends State<ResultsScreen> {
   final TextEditingController _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isSaving = false;
@@ -44,7 +44,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         score: quizProvider.score,
         totalQuestions: quizProvider.questions.length,
         date: DateTime.now(),
-        category: quizProvider.selectedCategory ?? 'All', // Fallback for null category
+        category: quizProvider.selectedCategory, // Fallback for null category
       );
 
       // Retry logic: attempt to save up to 2 times
@@ -59,16 +59,18 @@ class _ResultsScreenState extends State<ResultsScreen> {
         } catch (e) {
           retryCount++;
           if (retryCount == maxRetries) {
-            throw e; // Rethrow after max retries
+            rethrow ; // Rethrow after max retries
           }
           await Future.delayed(const Duration(milliseconds: 500)); // Wait before retry
         }
       }
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Score saved successfully!')),
-        );
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Score saved successfully!')),
+          );
+        }
 
         // Navigate to leaderboard after a slight delay to ensure UI stability
         await Future.delayed(const Duration(milliseconds: 300));
@@ -161,7 +163,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'Category: ${quizProvider.selectedCategory ?? 'All'}',
+                            'Category: ${quizProvider.selectedCategory }',
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ],

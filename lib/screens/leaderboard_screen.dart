@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/app_routes.dart';
 import '../providers/leaderboard_provider.dart';
-import '../providers/theme_provider.dart';
 
 class LeaderboardScreen extends StatefulWidget {
-  const LeaderboardScreen({Key? key}) : super(key: key);
+  const LeaderboardScreen({super.key});
 
   @override
-  _LeaderboardScreenState createState() => _LeaderboardScreenState();
+  LeaderboardScreenState createState() => LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen> {
+class LeaderboardScreenState extends State<LeaderboardScreen> {
   String? _selectedCategory;
 
   @override
@@ -27,7 +26,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     final leaderboardProvider = Provider.of<LeaderboardProvider>(context);
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    // final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(

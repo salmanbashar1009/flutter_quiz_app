@@ -5,13 +5,13 @@ import '../providers/quiz_provider.dart';
 import '../widgets/custom_button.dart';
 
 class CategorySelectionScreen extends StatefulWidget {
-  const CategorySelectionScreen({Key? key}) : super(key: key);
+  const CategorySelectionScreen({super.key});
 
   @override
-  _CategorySelectionScreenState createState() => _CategorySelectionScreenState();
+  CategorySelectionScreenState createState() => CategorySelectionScreenState();
 }
 
-class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
+class CategorySelectionScreenState extends State<CategorySelectionScreen> {
   List<String> _categories = [];
   String? _selectedCategory;
   bool _isLoading = true;

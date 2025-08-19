@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/app_routes.dart';
@@ -10,13 +9,13 @@ import '../widgets/answer_option.dart';
 import '../widgets/countdown_timer.dart';
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen({Key? key}) : super(key: key);
+  const QuizScreen({super.key});
 
   @override
-  _QuizScreenState createState() => _QuizScreenState();
+  QuizScreenState createState() => QuizScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen>
+class QuizScreenState extends State<QuizScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -155,7 +154,7 @@ class _QuizScreenState extends State<QuizScreen>
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       CountdownTimer(
-                        key: ValueKey('timer_${currentQuestionIndex}'),
+                        key: ValueKey('timer_$currentQuestionIndex'),
                         seconds: quizProvider.remainingTimeForCurrentQuestion,
                         onTimeUp: _handleTimeUp,
                       ),

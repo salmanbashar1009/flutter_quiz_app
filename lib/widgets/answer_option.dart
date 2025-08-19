@@ -29,15 +29,21 @@ class AnswerOption extends StatelessWidget {
       final terms = cleaned.split(')(');
       for (int i = 0; i < terms.length; i++) {
         terms[i] = terms[i].trim();
-        if (!terms[i].startsWith('(')) terms[i] = '(' + terms[i];
-        if (!terms[i].endsWith(')')) terms[i] = terms[i] + ')';
-        terms[i] = terms[i].replaceAllMapped(RegExp(r'([+\-])'), (match) => ' ${match.group(0)} ');
+        if (!terms[i].startsWith('(')) terms[i] = '(${terms[i]}';
+        if (!terms[i].endsWith(')')) terms[i] = '${terms[i]})';
+        terms[i] = terms[i].replaceAllMapped(
+          RegExp(r'([+\-])'),
+              (match) => ' ${match.group(0)} ',
+        );
       }
       cleaned = terms.join(')(');
     } else {
-      cleaned = cleaned.replaceAllMapped(RegExp(r'([+\-])'), (match) => ' ${match.group(0)} ');
+      cleaned = cleaned.replaceAllMapped(
+        RegExp(r'([+\-])'),
+            (match) => ' ${match.group(0)} ',
+      );
       if (cleaned.contains('^') && !cleaned.startsWith('(')) {
-        cleaned = '(' + cleaned + ')';
+        cleaned = '($cleaned)';
       }
     }
 
